@@ -30,8 +30,6 @@
   hosts: frontends
   gather_facts: false # remove later! speeds up testing
   become: true
-  vars:
-  - proxy: haproxy
   tasks:
   - name: Install httpie
     package:
@@ -39,11 +37,11 @@
       state: latest
   - name: Install HAProxy
     yum:
-      name: "{{ proxy }}"
+      name: haproxy
       state: latest
   - name: Enable HAProxy
     service:
-      name: "{{ proxy }}"
+      name: haproxy
       state: started
   - name: Configure HAProxy
     template:
@@ -51,7 +49,7 @@
       dest: /etc/haproxy/haproxy.cfg
   - name: restart HAproxy
     service:
-      name: "{{ proxy }}"
+      name: haproxy
       state: restarted
 
 
@@ -124,11 +122,19 @@
   - name: tell user to finish setting up postgres
     debug:
       msg: "Either uncomment the postgres setup or manually login and initialize"
-# only run the next 2 tasks once!
-#  - name: initilize postgres
-#    command: postgresql-setup initdb
-#  - name: initilize postgres some more
-#    command: chkconfig postgresql on
+  - name: Check if postgresql data folder exists
+    stat:
+      path: /var/lib/pgsql/data 
+    register: postgres_data_folder
+  - name: Debug data folder
+    debug:
+      msg: "{{ postgres_data_folder.stat.exists }}"
+  - name: initilize postgres
+    command: postgresql-setup initdb
+    when: postgres_data_folder.stat.exists == "false"
+  - name: initilize postgres some more
+    command: chkconfig postgresql on
+    when: postgres_data_folder.stat.exists == "false"
   - name: start postgres
     service:
       name: postgresql.service
