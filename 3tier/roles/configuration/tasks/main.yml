@@ -1,7 +1,6 @@
 ---
 # Enable required repositories
 
-  tasks:
   - name: Enable yum repositories
     template:
       src: ./open_three-tier-app.repo
