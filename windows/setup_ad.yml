@@ -1,0 +1,9 @@
+---
+- name: Windows lab playbook
+  hosts: windows
+  roles:
+    - role: win_ad_install 
+      vars:
+      - guid: e49f
+
+...
