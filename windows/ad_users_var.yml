@@ -1,0 +1,9 @@
+ad_groups:
+  - { group_name: "dev", group_scope: "domainlocal" }
+  - { group_name: "qa", group_scope: "domainlocal" }
+users:
+  - { name: "james", firstname: "James", lastname: "Jockey", password: "redhat@123", group_name: "dev" }
+  - { name: "bill", firstname: "Bill", lastname: "Gates", password: "redhat@123", group_name: "dev" }
+  - { name: "mickey", firstname: "Mickey", lastname: "Mouse", password: "redhat@123", group_name: "qa" }
+  - { name: "donald", firstname: "Donald", lastname: "Duck", password: "redhat@123", group_name: "qa" }
+guid: e49f

@@ -1,0 +1,22 @@
+---
+- name: Create group
+  win_domain_group:
+    name: "{{ item.group_name }}"
+    scope: "{{ item.group_scope }}"
+    state: present
+  loop: "{{ ad_groups }}"
+
+- name: Ensure user is present
+  win_domain_user:
+    name: "{{ item.name }}"
+    firstname: "{{ item.firstname }}"
+    surname: "{{ item.lastname }}"
+    password: "{{ item.password }}"
+    state: present
+    groups:
+    - "{{ item.group_name }}"
+    email: "{{ item.name }}@ad1.{{ guid }}.example.opentlc.com"
+  loop: "{{ users }}"
+    
+
+...
