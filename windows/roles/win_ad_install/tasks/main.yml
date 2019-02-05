@@ -1,0 +1,33 @@
+---
+
+- name: Install AD Domain Services
+  win_feature:
+    name: AD-Domain-Services
+    state: present
+
+- name: Setup AD Controller
+  win_domain:
+    dns_domain_name: "{{ ssh_host }}"
+    safe_mode_password: "{{ ansible_password }}"
+  register: win_ad_install_setup_ad
+
+- name: Debug Setup AD output
+  debug:
+    msg: "{{ win_ad_install_setup_ad }}"
+    verbosity: 1
+
+- name: Reboot AD machine
+  win_reboot:
+  when: win_ad_install_setup_ad.reboot_required == "true"
+  tags:
+  - restart
+
+- name: Get AD domains
+  win_command: 'nltest /dclist:"{{ ad_domain_name }}"'
+  register: win_ad_install_domains
+
+- name: Print AD domains
+  debug:
+    msg: "{{ win_ad_install_domains.stdout }}"
+
+  
