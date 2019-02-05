@@ -1,0 +1,13 @@
+---
+- name: Configure windows service
+  hosts: windows
+  vars_files: 
+  - ./ssh_var.yml
+  roles:
+  - role: win_service_config
+#    vars:
+#    - package_name: "{{ package_name }}"
+#    - service_name: "{{ service_name }}"   
+      
+
+...
